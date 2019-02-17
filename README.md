@@ -40,5 +40,6 @@ $ docker build -t grandcolline/clean-arch-demo .
 
 
 ## 参考
-http://nakawatch.hatenablog.com/entry/2018/07/11/181453
-https://qiita.com/hirotakan/items/698c1f5773a3cca6193e
+
+* http://nakawatch.hatenablog.com/entry/2018/07/11/181453
+* https://qiita.com/hirotakan/items/698c1f5773a3cca6193e
