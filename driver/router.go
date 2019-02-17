@@ -4,26 +4,26 @@ import (
 	"github.com/grandcolline/clean-arch-demo/adapter/controllers"
 	"github.com/grandcolline/clean-arch-demo/driver/mysql"
 
-	"github.com/gin-gonic/gin"
-	// "net/http"
-	// "github.com/go-chi/chi"
+	// "github.com/gin-gonic/gin"
+	"github.com/go-chi/chi"
+	"net/http"
 )
 
-var Router *gin.Engine
+// var Router *gin.Engine
 
-func init() {
-	router := gin.Default()
+func Serve() {
 	logger := &Logger{}
 	conn := mysql.Connect()
 	userController := controllers.NewUserController(conn, logger)
 
-	router.POST("/users", func(c *gin.Context) { userController.Create(c) })
-	router.GET("/users", func(c *gin.Context) { userController.FindByName(c) })
-	Router = router
+	// router := gin.Default()
+	// router.POST("/users", func(c *gin.Context) { userController.Create(c) })
+	// router.GET("/users", func(c *gin.Context) { userController.FindByName(c) })
+	// Router = router
 
-	// r := chi.NewRouter()
-	// r.Get("/", func(w http.ResponseWriter, r *http.Request) {
-	// 	w.Write([]byte("welcome"))
-	// })
-	// http.ListenAndServe(":8080", r)
+	r := chi.NewRouter()
+	r.Get("/users", func(w http.ResponseWriter, r *http.Request) {
+		userController.FindByName(w, r)
+	})
+	http.ListenAndServe(":8080", r)
 }

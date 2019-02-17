@@ -6,6 +6,7 @@ import (
 	"github.com/grandcolline/clean-arch-demo/adapter/interfaces"
 	"github.com/grandcolline/clean-arch-demo/entity"
 	"github.com/grandcolline/clean-arch-demo/usecase"
+	"net/http"
 
 	"github.com/jinzhu/gorm"
 	"github.com/pkg/errors"
@@ -50,21 +51,22 @@ func (controller *UserController) Create(c interfaces.Context) {
 	c.JSON(201, res)
 }
 
-func (controller *UserController) FindByName(c interfaces.Context) {
+// func (controller *UserController) FindByName(c interfaces.Context) {
+func (controller *UserController) FindByName(w http.ResponseWriter, r *http.Request) {
 	type (
 		Response struct {
 			UserID int `json:"user_id"`
 		}
 	)
-	name := c.Query("name")
-	fmt.Println("ppppppp:" + name)
+	name := r.URL.Query().Get("name")
 
 	users, err := controller.Interactor.FindByName(name)
 	if err != nil {
 		controller.Interactor.Logger.Log(errors.Wrap(err, "user_controller: cannot fond user"))
-		c.JSON(500, NewError(500, err.Error()))
+		http.Error(w, err.Error(), 500)
 		return
 	}
-	res := Response{UserID: users[0].ID}
-	c.JSON(201, res)
+	// res := Response{UserID: users[0].ID}
+	// c.JSON(201, res)
+	w.Write([]byte(fmt.Sprintf("id:%d", users[0].ID)))
 }
