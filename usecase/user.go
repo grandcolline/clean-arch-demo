@@ -11,10 +11,25 @@ type UserInteractor struct {
 }
 
 // UserRepository ユーザレポジトリ
+// データストアとの接続で用いるポート。実装はadpter層のgateway。
 type UserRepository interface {
 	Store(entity.User) (int, error)
 	FindByName(string) ([]entity.User, error)
 	FindAll() ([]entity.User, error)
+}
+
+// UserInputPort ユーザインプットポート
+// このusecaseの入力ポート。adpter層のcontrollerで使われる。
+type UserInputPort interface {
+	Add(entity.User) (int, error)
+	FindByName(string) ([]entity.User, error)
+}
+
+func NewUserInteractor(repo UserRepository, logger Logger) UserInputPort {
+	return &UserInteractor{
+		UserRepository: repo,
+		Logger:         logger,
+	}
 }
 
 // Add 新規ユーザを追加する

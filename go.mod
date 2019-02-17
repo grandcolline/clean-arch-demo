@@ -12,7 +12,6 @@ require (
 	github.com/jinzhu/now v1.0.0 // indirect
 	github.com/lib/pq v1.0.0 // indirect
 	github.com/mattn/go-sqlite3 v1.10.0 // indirect
-	github.com/pkg/errors v0.8.1
 	golang.org/x/crypto v0.0.0-20190211182817-74369b46fc67 // indirect
 	google.golang.org/appengine v1.4.0 // indirect
 )
