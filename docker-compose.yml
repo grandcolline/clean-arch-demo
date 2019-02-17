@@ -25,7 +25,7 @@ services:
       MYSQL_DATABASE: app
       MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
     volumes:
-      - ./.docker/mysql/data:/var/lib/mysql
+      - ./.docker/mysql/data:/var/lib/mysql:cached
       #- ./.docker/mysql/initdb.d:/docker-entrypoint-initdb.d
     ports:
       - 3306:3306

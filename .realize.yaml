@@ -15,7 +15,8 @@ schema:
     - go
     paths:
     - /
-    ignored_paths:
-    - .git
-    - .realize
-    - .docker
+    ignore:
+      paths:
+      - .git
+      - .realize
+      - vendor
