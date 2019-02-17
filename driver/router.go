@@ -1,11 +1,11 @@
 package driver
 
 import (
-	"github.com/grandcolline/clean-arch-demo/adapter/controllers"
-	"github.com/grandcolline/clean-arch-demo/driver/mysql"
+	"net/http"
 
 	"github.com/go-chi/chi"
-	"net/http"
+	"github.com/grandcolline/clean-arch-demo/adapter/controllers"
+	"github.com/grandcolline/clean-arch-demo/driver/mysql"
 )
 
 func Serve() {

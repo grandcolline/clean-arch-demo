@@ -2,12 +2,12 @@ package controllers
 
 import (
 	"fmt"
+	"net/http"
+
 	"github.com/grandcolline/clean-arch-demo/adapter/gateway"
 	"github.com/grandcolline/clean-arch-demo/adapter/interfaces"
 	"github.com/grandcolline/clean-arch-demo/entity"
 	"github.com/grandcolline/clean-arch-demo/usecase"
-	"net/http"
-
 	"github.com/jinzhu/gorm"
 	"github.com/pkg/errors"
 )

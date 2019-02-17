@@ -2,7 +2,6 @@ package mysql
 
 import (
 	"github.com/grandcolline/clean-arch-demo/adapter/gateway"
-
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 )

@@ -2,7 +2,6 @@ package gateway
 
 import (
 	"github.com/grandcolline/clean-arch-demo/entity"
-
 	"github.com/jinzhu/gorm"
 )
 
