@@ -30,7 +30,7 @@ $ docker run grandcolline/clean-arch-demo
 
 ```java
 entity
-└── user.go
+ └── user.go
 ```
 
 ### Use cases
@@ -39,28 +39,28 @@ entity
 
 ```java
 usecase
-├── logger.go
-└── user.go
+ ├── logger.go
+ └── user.go
 ```
 
 ### Interface Adapters
 
-外部から、ユースケースとエンティティーで使われる内部形式にデータを変換、  
-または内部から外部の機能にもっとも便利な形式に、データを変換するアダプター。
+外部から、ユースケースとエンティティで使われる内部形式にデータを変換、  
+または内部から外部の機能にもっとも便利な形式に、データを変換するアダプタ。
 
-コントローラーはインプットポートとアウトプットポートを組み立てて、インプット ポートを実行するだけ。
+コントローラはインプットポートとアウトプットポートを組み立てて、インプットポートを実行するだけ。
 
 ```java
 adapter
-├── controller
-│   ├── error.go
-│   └── user_controller.go
-├── gateway
-│   └── user_repository.go
-├── logger
-│   └── logger.go
-└── presenter
-    └── user_presenter.go
+ ├── controller
+ │   ├── error.go
+ │   └── user_controller.go
+ ├── gateway
+ │   └── user_repository.go
+ ├── logger
+ │   └── logger.go
+ └── presenter
+     └── user_presenter.go
 ```
 
 ### Frameworks & Drivers
@@ -70,9 +70,9 @@ adapter
 
 ```java
 driver
-├── logger.go
-├── mysql
-│   └── connection.go
-└── router.go
+ ├── logger.go
+ ├── mysql
+ │   └── connection.go
+ └── router.go
 ```
 
