@@ -1,10 +1,10 @@
-package controllers
+package controller
 
 import (
 	"net/http"
 
 	"github.com/grandcolline/clean-arch-demo/adapter/gateway"
-	"github.com/grandcolline/clean-arch-demo/adapter/interfaces"
+	"github.com/grandcolline/clean-arch-demo/adapter/logger"
 	"github.com/grandcolline/clean-arch-demo/adapter/presenter"
 	"github.com/grandcolline/clean-arch-demo/usecase"
 	"github.com/jinzhu/gorm"
@@ -16,7 +16,7 @@ type UserController struct {
 }
 
 // NewUserController ユーザコントローラの作成
-func NewUserController(w http.ResponseWriter, conn *gorm.DB, logger interfaces.Logger) *UserController {
+func NewUserController(w http.ResponseWriter, conn *gorm.DB, logger logger.Logger) *UserController {
 	// プレゼンタを作成
 	out := &presenter.UserPresenter{
 		Writer: w,

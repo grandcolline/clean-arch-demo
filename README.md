@@ -52,12 +52,12 @@ usecase
 
 ```java
 adapter
-├── controllers
+├── controller
 │   ├── error.go
 │   └── user_controller.go
 ├── gateway
 │   └── user_repository.go
-├── interfaces
+├── logger
 │   └── logger.go
 └── presenter
     └── user_presenter.go
