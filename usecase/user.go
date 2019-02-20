@@ -6,40 +6,55 @@ import (
 
 // UserInteractor ユーザインタラクタ
 type UserInteractor struct {
-	UserRepository UserRepository
-	Logger         Logger
-}
-
-// UserRepository ユーザレポジトリ
-// データストアとの接続で用いるポート。実装はadpter層のgateway。
-type UserRepository interface {
-	Store(entity.User) (int, error)
-	FindByName(string) ([]entity.User, error)
-	FindAll() ([]entity.User, error)
+	UserOutputPort     UserOutputPort
+	UserRepositoryPort UserRepositoryPort
+	Logger             Logger
 }
 
 // UserInputPort ユーザインプットポート
-// このusecaseの入力ポート。adpter層のcontrollerで使われる。
+// usecaseの入力ポート。adpter層のcontrollerで使われる。
 type UserInputPort interface {
-	Add(entity.User) (int, error)
-	FindByName(string) ([]entity.User, error)
+	FindByName(string)
 }
 
-func NewUserInteractor(repo UserRepository, logger Logger) UserInputPort {
+// UserOutputPort ユーザアウトプットポート
+// usecaseの出力ポート。実装はadpter層のpresenter。
+type UserOutputPort interface {
+	Render(*entity.User) error
+}
+
+// UserRepositoryPort ユーザレポジトリポート
+// データストアとの接続で用いるポート。実装はadpter層のgateway。
+type UserRepositoryPort interface {
+	FindByName(string) ([]entity.User, error)
+	// Store(entity.User) (int, error)
+	// FindAll() ([]entity.User, error)
+}
+
+// NewUserInteractor ユーザインタラクタの作成
+// ここでは入力ポートを作成している
+func NewUserInteractor(out UserOutputPort, repo UserRepositoryPort, logger Logger) UserInputPort {
 	return &UserInteractor{
-		UserRepository: repo,
-		Logger:         logger,
+		UserOutputPort:     out,
+		UserRepositoryPort: repo,
+		Logger:             logger,
 	}
 }
 
 // Add 新規ユーザを追加する
-func (i *UserInteractor) Add(u entity.User) (int, error) {
-	i.Logger.Log("store user!")
-	return i.UserRepository.Store(u)
-}
+// func (i *UserInteractor) Add(u entity.User) (int, error) {
+// 	i.Logger.Log("store user!")
+// 	return i.UserRepositoryPort.Store(u)
+// }
 
 // FindByName 名前でユーザを検索する
-func (i *UserInteractor) FindByName(name string) ([]entity.User, error) {
-	i.Logger.Log("find user!")
-	return i.UserRepository.FindByName(name)
+func (i *UserInteractor) FindByName(name string) {
+	i.Logger.Log("find user by name!")
+	users, err := i.UserRepositoryPort.FindByName(name)
+	if err != nil {
+		i.Logger.Log("error")
+		return
+	}
+	user := users[0]
+	i.UserOutputPort.Render(&user)
 }

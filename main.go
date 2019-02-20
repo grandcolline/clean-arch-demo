@@ -7,6 +7,5 @@ import (
 
 func main() {
 	defer mysql.CloseConn()
-	// driver.Router.Run()
 	driver.Serve()
 }
