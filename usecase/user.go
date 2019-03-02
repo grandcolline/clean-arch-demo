@@ -1,8 +1,6 @@
 package usecase
 
-import (
-	"github.com/grandcolline/clean-arch-demo/entity"
-)
+import "github.com/grandcolline/clean-arch-demo/entity"
 
 // UserInteractor ユーザインタラクタ
 type UserInteractor struct {
@@ -20,7 +18,8 @@ type UserInputPort interface {
 // UserOutputPort ユーザアウトプットポート
 // usecaseの出力ポート。実装はadpter層のpresenter。
 type UserOutputPort interface {
-	Render(*entity.User) error
+	RenderUser(*entity.User) error
+	RenderUserList(*[]entity.User) error
 }
 
 // UserRepositoryPort ユーザレポジトリポート
@@ -56,5 +55,5 @@ func (i *UserInteractor) FindByName(name string) {
 		return
 	}
 	user := users[0]
-	i.UserOutputPort.Render(&user)
+	i.UserOutputPort.RenderUser(&user)
 }
