@@ -25,66 +25,77 @@ type User struct {
 	Email string `gorm:"size:100;not null"`
 }
 
-// func (r *UserGateway) Store(u entity.User) (id int, err error) {
-// 	user := &User{
-// 		Name:  u.Name,
-// 		Email: u.Email,
-// 	}
-//
-// 	if err = r.Conn.Create(user).Error; err != nil {
-// 		return
-// 	}
-//
-// 	return int(user.ID), nil
-// }
+// Store ユーザの新規追加をする
+func (g *UserGateway) Store(u entity.User) (id uint32, err error) {
+	user := &User{
+		Name:  u.Name,
+		Email: u.Email,
+	}
 
-// FindByName 名前でユーザを検索する
-func (r *UserGateway) FindByName(name string) (d []entity.User, err error) {
-	users := []User{}
-	if err = r.Conn.Where("name = ?", name).Find(&users).Error; err != nil {
+	if err = g.Conn.Create(user).Error; err != nil {
 		return
 	}
 
-	n := len(users)
-	d = make([]entity.User, n)
-	for i := 0; i < n; i++ {
-		d[i].ID = uint32(users[i].ID)
-		d[i].Name = users[i].Name
-		d[i].Email = users[i].Email
-	}
-	return
+	return uint32(user.ID), nil
 }
 
-// FindByID IDでユーザを検索する
-func (r *UserGateway) FindByID(id uint32) (d entity.User, err error) {
-	user := User{
-		Model: gorm.Model{ID: uint(id)},
-	}
-	if err = r.Conn.First(&user).Error; err != nil {
+// FindByName 名前でユーザを検索する
+func (g *UserGateway) FindByName(name string) (d []entity.User, err error) {
+	users := []User{}
+	if err = g.Conn.Where("name = ?", name).Find(&users).Error; err != nil {
 		return
 	}
 
 	// エンティティの作成
-	d.ID = uint32(user.ID)
-	d.Name = user.Name
-	d.Email = user.Email
+	d = usersToEntities(users)
+
+	return
+}
+
+// FindByID IDでユーザを検索する
+func (g *UserGateway) FindByID(id uint32) (d entity.User, err error) {
+	user := User{
+		Model: gorm.Model{ID: uint(id)},
+	}
+	if err = g.Conn.First(&user).Error; err != nil {
+		return
+	}
+
+	// エンティティの作成
+	d = userToEntity(user)
 
 	return
 }
 
 // FindAll 全ユーザを検索する
-func (r *UserGateway) FindAll() (d []entity.User, err error) {
+func (g *UserGateway) FindAll() (d []entity.User, err error) {
 	users := []User{}
-	if err = r.Conn.Find(&users).Error; err != nil {
+	if err = g.Conn.Find(&users).Error; err != nil {
 		return
 	}
 
-	n := len(users)
-	d = make([]entity.User, n)
+	// エンティティの作成
+	d = usersToEntities(users)
+
+	return
+}
+
+// userToEntity ユーザをユーザエンティティに詰め直す
+func userToEntity(u User) (e entity.User) {
+	e.ID = uint32(u.ID)
+	e.Name = u.Name
+	e.Email = u.Email
+	return
+}
+
+// usersToUserEntities ユーザのスライスをユーザエンティティのスライスに詰め直す
+func usersToEntities(us []User) (es []entity.User) {
+	n := len(us)
+	es = make([]entity.User, n)
 	for i := 0; i < n; i++ {
-		d[i].ID = uint32(users[i].ID)
-		d[i].Name = users[i].Name
-		d[i].Email = users[i].Email
+		es[i].ID = uint32(us[i].ID)
+		es[i].Name = us[i].Name
+		es[i].Email = us[i].Email
 	}
 	return
 }

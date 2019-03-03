@@ -27,7 +27,7 @@ type UserOutputPort interface {
 // UserRepositoryPort ユーザレポジトリポート
 // データストアとの接続で用いるポートのInterface。実装はadpter層のgateway。
 type UserRepositoryPort interface {
-	// Store(entity.User) (int, error)
+	Store(entity.User) (uint32, error)
 	FindAll() ([]entity.User, error)
 	FindByName(string) ([]entity.User, error)
 	FindByID(uint32) (entity.User, error)
