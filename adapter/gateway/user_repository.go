@@ -2,12 +2,20 @@ package gateway
 
 import (
 	"github.com/grandcolline/clean-arch-demo/entity"
+	"github.com/grandcolline/clean-arch-demo/usecase"
 	"github.com/jinzhu/gorm"
 )
 
-// UserRepository ユーザレポジトリ
-type UserRepository struct {
+// UserGateway ユーザゲートウェイ
+type UserGateway struct {
 	Conn *gorm.DB
+}
+
+// NewUserGateway ユーザゲートウェイの作成
+func NewUserGateway(conn *gorm.DB) usecase.UserRepositoryPort {
+	return &UserGateway{
+		Conn: conn,
+	}
 }
 
 // User ユーザテーブルのデータ構造
@@ -17,7 +25,7 @@ type User struct {
 	Email string `gorm:"size:100;not null"`
 }
 
-// func (r *UserRepository) Store(u entity.User) (id int, err error) {
+// func (r *UserGateway) Store(u entity.User) (id int, err error) {
 // 	user := &User{
 // 		Name:  u.Name,
 // 		Email: u.Email,
@@ -31,7 +39,7 @@ type User struct {
 // }
 
 // FindByName 名前でユーザを検索する
-func (r *UserRepository) FindByName(name string) (d []entity.User, err error) {
+func (r *UserGateway) FindByName(name string) (d []entity.User, err error) {
 	users := []User{}
 	if err = r.Conn.Where("name = ?", name).Find(&users).Error; err != nil {
 		return
@@ -48,7 +56,7 @@ func (r *UserRepository) FindByName(name string) (d []entity.User, err error) {
 }
 
 // FindByID IDでユーザを検索する
-func (r *UserRepository) FindByID(id uint32) (d entity.User, err error) {
+func (r *UserGateway) FindByID(id uint32) (d entity.User, err error) {
 	user := User{
 		Model: gorm.Model{ID: uint(id)},
 	}
@@ -65,7 +73,7 @@ func (r *UserRepository) FindByID(id uint32) (d entity.User, err error) {
 }
 
 // FindAll 全ユーザを検索する
-func (r *UserRepository) FindAll() (d []entity.User, err error) {
+func (r *UserGateway) FindAll() (d []entity.User, err error) {
 	users := []User{}
 	if err = r.Conn.Find(&users).Error; err != nil {
 		return

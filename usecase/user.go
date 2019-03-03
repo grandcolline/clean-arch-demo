@@ -10,7 +10,7 @@ type UserInteractor struct {
 }
 
 // UserInputPort ユーザインプットポート
-// usecaseの入力ポート。adpter層のcontrollerで使われる。
+// 入力ポートのInterface。adpter層のcontrollerで使われる。
 type UserInputPort interface {
 	FindAll()
 	FindByID(uint32)
@@ -18,14 +18,14 @@ type UserInputPort interface {
 }
 
 // UserOutputPort ユーザアウトプットポート
-// usecaseの出力ポート。実装はadpter層のpresenter。
+// 出力ポートのInterface。実装はadpter層のpresenter。
 type UserOutputPort interface {
 	RenderUser(*entity.User) error
 	RenderUserList(*[]entity.User) error
 }
 
 // UserRepositoryPort ユーザレポジトリポート
-// データストアとの接続で用いるポート。実装はadpter層のgateway。
+// データストアとの接続で用いるポートのInterface。実装はadpter層のgateway。
 type UserRepositoryPort interface {
 	// Store(entity.User) (int, error)
 	FindAll() ([]entity.User, error)
@@ -34,7 +34,7 @@ type UserRepositoryPort interface {
 }
 
 // NewUserInteractor ユーザインタラクタの作成
-// ここでは入力ポートを作成している
+// 入力ポートを作成する。
 func NewUserInteractor(out UserOutputPort, repo UserRepositoryPort, logger Logger) UserInputPort {
 	return &UserInteractor{
 		UserOutputPort:     out,

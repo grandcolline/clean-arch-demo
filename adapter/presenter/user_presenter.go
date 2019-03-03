@@ -5,18 +5,20 @@ import (
 	"net/http"
 
 	"github.com/grandcolline/clean-arch-demo/entity"
+	"github.com/grandcolline/clean-arch-demo/usecase"
 )
 
 // UserPresenter ユーザプレゼンタ
 type UserPresenter struct {
-	Writer http.ResponseWriter
+	writer http.ResponseWriter
 }
 
-// func NewUserPresenter(w http.ResponseWriter) usecase.UserOutputPort {
-// 	return &UserPresenter{
-// 		w: w,
-// 	}
-// }
+// NewUserPresenter ユーザプレゼンタの作成
+func NewUserPresenter(w http.ResponseWriter) usecase.UserOutputPort {
+	return &UserPresenter{
+		writer: w,
+	}
+}
 
 // User ユーザレスポンスの構造体
 type User struct {
@@ -30,11 +32,11 @@ func (p *UserPresenter) RenderUser(u *entity.User) error {
 	user := User{u.ID, u.Name, u.Email}
 	res, err := json.Marshal(user)
 	if err != nil {
-		http.Error(p.Writer, err.Error(), http.StatusInternalServerError)
+		http.Error(p.writer, err.Error(), http.StatusInternalServerError)
 		return err
 	}
-	p.Writer.Header().Set("Content-Type", "application/json")
-	p.Writer.Write(res)
+	p.writer.Header().Set("Content-Type", "application/json")
+	p.writer.Write(res)
 	return nil
 }
 
@@ -46,10 +48,10 @@ func (p *UserPresenter) RenderUserList(us *[]entity.User) error {
 	}
 	res, err := json.Marshal(users)
 	if err != nil {
-		http.Error(p.Writer, err.Error(), http.StatusInternalServerError)
+		http.Error(p.writer, err.Error(), http.StatusInternalServerError)
 		return err
 	}
-	p.Writer.Header().Set("Content-Type", "application/json")
-	p.Writer.Write(res)
+	p.writer.Header().Set("Content-Type", "application/json")
+	p.writer.Write(res)
 	return nil
 }

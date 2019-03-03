@@ -5,25 +5,31 @@ import (
 
 	"github.com/go-chi/chi"
 	"github.com/grandcolline/clean-arch-demo/adapter/controller"
+	"github.com/grandcolline/clean-arch-demo/adapter/gateway"
 	"github.com/grandcolline/clean-arch-demo/driver/mysql"
 )
 
-// Serve サーバ設定
-// ルーティング（コントローラの指定）もここで行う
+// Serve サーバのルーティング設定
 func Serve() {
-	logger := &Logger{}
-	conn := mysql.Connect()
-
 	r := chi.NewRouter()
-	r.Get("/users", func(w http.ResponseWriter, r *http.Request) {
-		userController := controller.NewUserController(w, conn, logger)
-		// userController.FindByName(w, r)
-		userController.FindAll(w, r)
-	})
-	r.Get("/users/{userID}", func(w http.ResponseWriter, r *http.Request) {
-		userController := controller.NewUserController(w, conn, logger)
-		// userController.FindByName(w, r)
-		userController.FindByID(w, r)
-	})
+	r.Mount("/users", userRouter())
 	http.ListenAndServe(":8080", r)
+}
+
+// userRouter ユーザ用のサブルーター
+func userRouter() http.Handler {
+	// ユーザゲートウェイの作成
+	conn := mysql.Connect()
+	userGateway := gateway.NewUserGateway(conn)
+
+	// ユーザコントローラの作成
+	logger := &Logger{}
+	userController := controller.NewUserController(userGateway, logger)
+
+	// ルーティング
+	r := chi.NewRouter()
+	r.HandleFunc("/", userController.FindAll)
+	r.HandleFunc("/{userID}", userController.FindByID)
+
+	return r
 }
