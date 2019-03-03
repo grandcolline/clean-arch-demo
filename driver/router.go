@@ -28,8 +28,13 @@ func userRouter() http.Handler {
 
 	// ルーティング
 	r := chi.NewRouter()
-	r.HandleFunc("/", userController.FindAll)
-	r.HandleFunc("/{userID}", userController.FindByID)
+	r.Get("/", userController.FindAll) // GET /users
+	r.Post("/", userController.Add)    // POST /users
+	r.Route("/{userID:[0-9-]+}", func(r chi.Router) {
+		r.Get("/", userController.FindByID) // GET /users/{userID}
+		// r.Put("/", userController.FindByID)    // PUT /users/{userID}
+		// r.Delete("/", userController.FindByID) // DELETE /users/{userID}
+	})
 
 	return r
 }
