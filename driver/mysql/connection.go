@@ -1,7 +1,7 @@
 package mysql
 
 import (
-	"github.com/grandcolline/clean-arch-demo/adapter/gateway"
+	"github.com/grandcolline/clean-arch-demo/adapter/gateway/model"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 )
@@ -17,8 +17,8 @@ func Connect() *gorm.DB {
 		panic(err)
 	}
 	// テーブルの存在チェック
-	if !db.HasTable(&gateway.User{}) {
-		if err := db.Table("users").CreateTable(&gateway.User{}).Error; err != nil {
+	if !db.HasTable(&model.User{}) {
+		if err := db.Table("users").CreateTable(&model.User{}).Error; err != nil {
 			panic(err)
 		}
 	}

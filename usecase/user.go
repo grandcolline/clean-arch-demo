@@ -102,6 +102,5 @@ func (i *UserInteractor) FindByName(name string) {
 		i.Logger.Log("error")
 		return
 	}
-	user := users[0]
-	i.UserOutputPort.RenderUser(&user)
+	i.UserOutputPort.RenderUserList(&users)
 }
