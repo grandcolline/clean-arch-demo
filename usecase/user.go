@@ -12,6 +12,8 @@ type UserInteractor struct {
 // UserInputPort ユーザインプットポート
 // usecaseの入力ポート。adpter層のcontrollerで使われる。
 type UserInputPort interface {
+	FindAll()
+	FindByID(uint32)
 	FindByName(string)
 }
 
@@ -25,9 +27,10 @@ type UserOutputPort interface {
 // UserRepositoryPort ユーザレポジトリポート
 // データストアとの接続で用いるポート。実装はadpter層のgateway。
 type UserRepositoryPort interface {
-	FindByName(string) ([]entity.User, error)
 	// Store(entity.User) (int, error)
-	// FindAll() ([]entity.User, error)
+	FindAll() ([]entity.User, error)
+	FindByName(string) ([]entity.User, error)
+	FindByID(uint32) (entity.User, error)
 }
 
 // NewUserInteractor ユーザインタラクタの作成
@@ -46,9 +49,32 @@ func NewUserInteractor(out UserOutputPort, repo UserRepositoryPort, logger Logge
 // 	return i.UserRepositoryPort.Store(u)
 // }
 
+// FindAll ずべてのユーザを検索する
+func (i *UserInteractor) FindAll() {
+	i.Logger.Log("Interactor: FindAll")
+
+	users, err := i.UserRepositoryPort.FindAll()
+	if err != nil {
+		i.Logger.Log("error")
+		return
+	}
+	i.UserOutputPort.RenderUserList(&users)
+}
+
+// FindByID IDでユーザを検索する
+func (i *UserInteractor) FindByID(id uint32) {
+	i.Logger.Log("Interactor: FindByID")
+	user, err := i.UserRepositoryPort.FindByID(id)
+	if err != nil {
+		i.Logger.Log("error")
+		return
+	}
+	i.UserOutputPort.RenderUser(&user)
+}
+
 // FindByName 名前でユーザを検索する
 func (i *UserInteractor) FindByName(name string) {
-	i.Logger.Log("find user by name!")
+	i.Logger.Log("Interactor: FindByName")
 	users, err := i.UserRepositoryPort.FindByName(name)
 	if err != nil {
 		i.Logger.Log("error")

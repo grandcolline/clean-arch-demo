@@ -17,7 +17,13 @@ func Serve() {
 	r := chi.NewRouter()
 	r.Get("/users", func(w http.ResponseWriter, r *http.Request) {
 		userController := controller.NewUserController(w, conn, logger)
-		userController.FindByName(w, r)
+		// userController.FindByName(w, r)
+		userController.FindAll(w, r)
+	})
+	r.Get("/users/{userID}", func(w http.ResponseWriter, r *http.Request) {
+		userController := controller.NewUserController(w, conn, logger)
+		// userController.FindByName(w, r)
+		userController.FindByID(w, r)
 	})
 	http.ListenAndServe(":8080", r)
 }

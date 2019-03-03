@@ -2,7 +2,9 @@ package controller
 
 import (
 	"net/http"
+	"strconv"
 
+	"github.com/go-chi/chi"
 	"github.com/grandcolline/clean-arch-demo/adapter/gateway"
 	"github.com/grandcolline/clean-arch-demo/adapter/logger"
 	"github.com/grandcolline/clean-arch-demo/adapter/presenter"
@@ -38,4 +40,19 @@ func (c *UserController) FindByName(w http.ResponseWriter, r *http.Request) {
 	// usecaseの実行
 	// 出力はコントローラは関与しない
 	c.input.FindByName(name)
+}
+
+// FindByID IDでユーザを検索する
+func (c *UserController) FindByID(w http.ResponseWriter, r *http.Request) {
+	userID := chi.URLParam(r, "userID")
+	id, _ := strconv.ParseUint(userID, 10, 32)
+
+	// usecaseの実行
+	// 出力はコントローラは関与しない
+	c.input.FindByID(uint32(id))
+}
+
+// FindAll 全ユーザを検索する
+func (c *UserController) FindAll(w http.ResponseWriter, r *http.Request) {
+	c.input.FindAll()
 }

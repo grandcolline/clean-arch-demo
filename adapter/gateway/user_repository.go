@@ -15,7 +15,6 @@ type User struct {
 	gorm.Model
 	Name  string `gorm:"size:20;not null"`
 	Email string `gorm:"size:100;not null"`
-	Age   int    `gorm:"type:smallint"`
 }
 
 // func (r *UserRepository) Store(u entity.User) (id int, err error) {
@@ -41,25 +40,43 @@ func (r *UserRepository) FindByName(name string) (d []entity.User, err error) {
 	n := len(users)
 	d = make([]entity.User, n)
 	for i := 0; i < n; i++ {
-		d[i].ID = int(users[i].ID)
+		d[i].ID = uint32(users[i].ID)
 		d[i].Name = users[i].Name
 		d[i].Email = users[i].Email
 	}
 	return
 }
 
-// func (r *UserRepository) FindAll() (d []entity.User, err error) {
-// 	users := []User{}
-// 	if err = r.Conn.Find(&users).Error; err != nil {
-// 		return
-// 	}
-//
-// 	n := len(users)
-// 	d = make([]entity.User, n)
-// 	for i := 0; i < n; i++ {
-// 		d[i].ID = int(users[i].ID)
-// 		d[i].Name = users[i].Name
-// 		d[i].Email = users[i].Email
-// 	}
-// 	return
-// }
+// FindByID IDでユーザを検索する
+func (r *UserRepository) FindByID(id uint32) (d entity.User, err error) {
+	user := User{
+		Model: gorm.Model{ID: uint(id)},
+	}
+	if err = r.Conn.First(&user).Error; err != nil {
+		return
+	}
+
+	// エンティティの作成
+	d.ID = uint32(user.ID)
+	d.Name = user.Name
+	d.Email = user.Email
+
+	return
+}
+
+// FindAll 全ユーザを検索する
+func (r *UserRepository) FindAll() (d []entity.User, err error) {
+	users := []User{}
+	if err = r.Conn.Find(&users).Error; err != nil {
+		return
+	}
+
+	n := len(users)
+	d = make([]entity.User, n)
+	for i := 0; i < n; i++ {
+		d[i].ID = uint32(users[i].ID)
+		d[i].Name = users[i].Name
+		d[i].Email = users[i].Email
+	}
+	return
+}
