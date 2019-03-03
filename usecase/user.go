@@ -10,22 +10,29 @@ type UserInteractor struct {
 }
 
 // UserInputPort ユーザインプットポート
-// 入力ポートのInterface。adpter層のcontrollerで使われる。
+//
+// 入力ポートのInterface。
+// adpter層のcontrollerで使われる。
 type UserInputPort interface {
 	FindAll()
 	FindByID(uint32)
 	FindByName(string)
+	Add(entity.User)
 }
 
 // UserOutputPort ユーザアウトプットポート
-// 出力ポートのInterface。実装はadpter層のpresenter。
+//
+// 出力ポートのInterface。
+// 実装はadpter層のpresenter。
 type UserOutputPort interface {
 	RenderUser(*entity.User) error
 	RenderUserList(*[]entity.User) error
 }
 
 // UserRepositoryPort ユーザレポジトリポート
-// データストアとの接続で用いるポートのInterface。実装はadpter層のgateway。
+//
+// データストアとの接続で用いるポートのInterface。
+// 実装はadpter層のgateway。
 type UserRepositoryPort interface {
 	Store(entity.User) (uint32, error)
 	FindAll() ([]entity.User, error)
@@ -34,7 +41,6 @@ type UserRepositoryPort interface {
 }
 
 // NewUserInteractor ユーザインタラクタの作成
-// 入力ポートを作成する。
 func NewUserInteractor(out UserOutputPort, repo UserRepositoryPort, logger Logger) UserInputPort {
 	return &UserInteractor{
 		UserOutputPort:     out,
@@ -44,14 +50,30 @@ func NewUserInteractor(out UserOutputPort, repo UserRepositoryPort, logger Logge
 }
 
 // Add 新規ユーザを追加する
-// func (i *UserInteractor) Add(u entity.User) (int, error) {
-// 	i.Logger.Log("store user!")
-// 	return i.UserRepositoryPort.Store(u)
-// }
+func (i *UserInteractor) Add(u entity.User) {
+	i.Logger.Log("Interactor: User Add")
+
+	// ユーザの登録
+	id, err := i.UserRepositoryPort.Store(u)
+	if err != nil {
+		i.Logger.Log("error")
+		return
+	}
+
+	// 作成したユーザの取得
+	user, err := i.UserRepositoryPort.FindByID(id)
+	if err != nil {
+		i.Logger.Log("error")
+		return
+	}
+
+	// Output
+	i.UserOutputPort.RenderUser(&user)
+}
 
 // FindAll ずべてのユーザを検索する
 func (i *UserInteractor) FindAll() {
-	i.Logger.Log("Interactor: FindAll")
+	i.Logger.Log("Interactor: User FindAll")
 
 	users, err := i.UserRepositoryPort.FindAll()
 	if err != nil {
@@ -63,7 +85,7 @@ func (i *UserInteractor) FindAll() {
 
 // FindByID IDでユーザを検索する
 func (i *UserInteractor) FindByID(id uint32) {
-	i.Logger.Log("Interactor: FindByID")
+	i.Logger.Log("Interactor: User FindByID")
 	user, err := i.UserRepositoryPort.FindByID(id)
 	if err != nil {
 		i.Logger.Log("error")
@@ -74,7 +96,7 @@ func (i *UserInteractor) FindByID(id uint32) {
 
 // FindByName 名前でユーザを検索する
 func (i *UserInteractor) FindByName(name string) {
-	i.Logger.Log("Interactor: FindByName")
+	i.Logger.Log("Interactor: User FindByName")
 	users, err := i.UserRepositoryPort.FindByName(name)
 	if err != nil {
 		i.Logger.Log("error")
