@@ -18,13 +18,6 @@ func NewUserGateway(conn *gorm.DB) usecase.UserRepositoryPort {
 	}
 }
 
-// User ユーザテーブルのデータ構造
-type User struct {
-	gorm.Model
-	Name  string `gorm:"size:20;not null"`
-	Email string `gorm:"size:100;not null"`
-}
-
 // Store ユーザの新規追加をする
 func (g *UserGateway) Store(u entity.User) (id uint32, err error) {
 	user := &User{
@@ -47,7 +40,11 @@ func (g *UserGateway) FindByName(name string) (d []entity.User, err error) {
 	}
 
 	// エンティティの作成
-	d = usersToEntities(users)
+	n := len(users)
+	d = make([]entity.User, n)
+	for i := 0; i < n; i++ {
+		d[i] = users[i].ToEntity()
+	}
 
 	return
 }
@@ -62,7 +59,7 @@ func (g *UserGateway) FindByID(id uint32) (d entity.User, err error) {
 	}
 
 	// エンティティの作成
-	d = userToEntity(user)
+	d = user.ToEntity()
 
 	return
 }
@@ -75,27 +72,11 @@ func (g *UserGateway) FindAll() (d []entity.User, err error) {
 	}
 
 	// エンティティの作成
-	d = usersToEntities(users)
-
-	return
-}
-
-// userToEntity ユーザをユーザエンティティに詰め直す
-func userToEntity(u User) (e entity.User) {
-	e.ID = uint32(u.ID)
-	e.Name = u.Name
-	e.Email = u.Email
-	return
-}
-
-// usersToUserEntities ユーザのスライスをユーザエンティティのスライスに詰め直す
-func usersToEntities(us []User) (es []entity.User) {
-	n := len(us)
-	es = make([]entity.User, n)
+	n := len(users)
+	d = make([]entity.User, n)
 	for i := 0; i < n; i++ {
-		es[i].ID = uint32(us[i].ID)
-		es[i].Name = us[i].Name
-		es[i].Email = us[i].Email
+		d[i] = users[i].ToEntity()
 	}
+
 	return
 }
