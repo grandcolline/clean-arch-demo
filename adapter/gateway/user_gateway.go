@@ -20,7 +20,7 @@ func NewUserGateway(conn *gorm.DB) usecase.UserRepositoryPort {
 }
 
 // Store ユーザの新規追加をする
-func (g *UserGateway) Store(u entity.User) (id uint32, err error) {
+func (g *UserGateway) Store(u entity.User) (e entity.User, err error) {
 	user := &model.User{
 		Name:  u.Name,
 		Email: u.Email,
@@ -30,7 +30,23 @@ func (g *UserGateway) Store(u entity.User) (id uint32, err error) {
 		return
 	}
 
-	return uint32(user.ID), nil
+	e = user.ToEntity()
+	return
+}
+
+// Update ユーザ情報を更新する
+func (g *UserGateway) Update(u entity.User) (err error) {
+	user := &model.User{
+		Model: gorm.Model{ID: uint(u.ID)},
+		Name:  u.Name,
+		Email: u.Email,
+	}
+
+	if err = g.Conn.Omit("created_at", "deleted_at").Save(user).Error; err != nil {
+		return
+	}
+
+	return
 }
 
 // Delete ユーザの削除をする

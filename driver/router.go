@@ -31,8 +31,8 @@ func userRouter() http.Handler {
 	r.Get("/", userController.FindAll) // GET /users
 	r.Post("/", userController.Add)    // POST /users
 	r.Route("/{userID:[0-9-]+}", func(r chi.Router) {
-		r.Get("/", userController.FindByID) // GET /users/{userID}
-		// r.Put("/", userController.FindByID)    // PUT /users/{userID}
+		r.Get("/", userController.FindByID)  // GET /users/{userID}
+		r.Put("/", userController.Change)    // PUT /users/{userID}
 		r.Delete("/", userController.Delete) // DELETE /users/{userID}
 	})
 

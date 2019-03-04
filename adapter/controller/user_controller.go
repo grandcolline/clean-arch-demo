@@ -83,6 +83,37 @@ func (c *UserController) Add(w http.ResponseWriter, r *http.Request) {
 	inputPort.Add(e)
 }
 
+// Change ユーザ情報の変更
+func (c *UserController) Change(w http.ResponseWriter, r *http.Request) {
+	// inputPortの組み立て
+	outputPort := c.OutputFactory(w)
+	inputPort := c.InputFactory(outputPort)
+
+	// IDの取得
+	userID := chi.URLParam(r, "userID")
+	id, _ := strconv.ParseUint(userID, 10, 32)
+
+	// POSTのデータを読み取る
+	var f form.User
+	if err := f.Set(r); err != nil {
+		// TODO: 後でエラーハンドリングする
+		return
+	}
+
+	// バリデーションチェック
+	if ok, _ := f.Validate(); !ok {
+		// TODO: 後でエラーハンドリングする
+		return
+	}
+
+	// エンティティに詰める
+	e := f.ToEntity()
+	e.ID = uint32(id)
+
+	// usecaseの実行
+	inputPort.Change(e)
+}
+
 // Delete ユーザを削除する
 func (c *UserController) Delete(w http.ResponseWriter, r *http.Request) {
 	// inputPortの組み立て

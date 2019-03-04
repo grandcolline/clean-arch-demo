@@ -18,6 +18,7 @@ type UserInputPort interface {
 	FindByID(uint32)
 	FindByName(string)
 	Add(entity.User)
+	Change(entity.User)
 	Delete(uint32)
 }
 
@@ -36,7 +37,8 @@ type UserOutputPort interface {
 // データストアとの接続で用いるポートのInterface。
 // 実装はadpter層のgateway。
 type UserRepositoryPort interface {
-	Store(entity.User) (uint32, error)
+	Store(entity.User) (entity.User, error)
+	Update(entity.User) error
 	FindAll() ([]entity.User, error)
 	FindByName(string) ([]entity.User, error)
 	FindByID(uint32) (entity.User, error)
@@ -57,15 +59,38 @@ func (i *UserInteractor) Add(u entity.User) {
 	i.Logger.Log("Interactor: User Add")
 
 	// ユーザの登録
-	id, err := i.UserRepositoryPort.Store(u)
+	user, err := i.UserRepositoryPort.Store(u)
 	if err != nil {
 		i.Logger.Log("error")
 		return
 	}
 
-	// 作成したユーザの取得
-	user, err := i.UserRepositoryPort.FindByID(id)
+	// Output
+	i.UserOutputPort.RenderUser(&user)
+}
+
+// Change ユーザ情報を変更する
+func (i *UserInteractor) Change(u entity.User) {
+	i.Logger.Log("Interactor: User Change")
+
+	// ユーザ情報の取得
+	user, err := i.UserRepositoryPort.FindByID(u.ID)
 	if err != nil {
+		i.Logger.Log("error")
+		return
+	}
+
+	// 情報の更新
+	if u.Name != "" {
+		user.Name = u.Name
+	}
+
+	if u.Email != "" {
+		user.Email = u.Email
+	}
+
+	// ユーザ情報の変更
+	if err := i.UserRepositoryPort.Update(user); err != nil {
 		i.Logger.Log("error")
 		return
 	}
@@ -83,6 +108,8 @@ func (i *UserInteractor) FindAll() {
 		i.Logger.Log("error")
 		return
 	}
+
+	// Output
 	i.UserOutputPort.RenderUserList(&users)
 }
 
@@ -94,6 +121,8 @@ func (i *UserInteractor) FindByID(id uint32) {
 		i.Logger.Log("error")
 		return
 	}
+
+	// Output
 	i.UserOutputPort.RenderUser(&user)
 }
 
@@ -105,6 +134,8 @@ func (i *UserInteractor) FindByName(name string) {
 		i.Logger.Log("error")
 		return
 	}
+
+	// Output
 	i.UserOutputPort.RenderUserList(&users)
 }
 
@@ -122,5 +153,6 @@ func (i *UserInteractor) Delete(id uint32) {
 		return
 	}
 
+	// Output
 	i.UserOutputPort.RenderSuccess()
 }
