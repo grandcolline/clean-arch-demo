@@ -33,7 +33,7 @@ func userRouter() http.Handler {
 	r.Route("/{userID:[0-9-]+}", func(r chi.Router) {
 		r.Get("/", userController.FindByID) // GET /users/{userID}
 		// r.Put("/", userController.FindByID)    // PUT /users/{userID}
-		// r.Delete("/", userController.FindByID) // DELETE /users/{userID}
+		r.Delete("/", userController.Delete) // DELETE /users/{userID}
 	})
 
 	return r

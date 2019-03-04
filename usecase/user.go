@@ -18,6 +18,7 @@ type UserInputPort interface {
 	FindByID(uint32)
 	FindByName(string)
 	Add(entity.User)
+	Delete(uint32)
 }
 
 // UserOutputPort ユーザアウトプットポート
@@ -27,6 +28,7 @@ type UserInputPort interface {
 type UserOutputPort interface {
 	RenderUser(*entity.User) error
 	RenderUserList(*[]entity.User) error
+	RenderSuccess() error
 }
 
 // UserRepositoryPort ユーザレポジトリポート
@@ -38,6 +40,7 @@ type UserRepositoryPort interface {
 	FindAll() ([]entity.User, error)
 	FindByName(string) ([]entity.User, error)
 	FindByID(uint32) (entity.User, error)
+	Delete(entity.User) error
 }
 
 // NewUserInteractor ユーザインタラクタの作成
@@ -103,4 +106,21 @@ func (i *UserInteractor) FindByName(name string) {
 		return
 	}
 	i.UserOutputPort.RenderUserList(&users)
+}
+
+// Delete ユーザを削除する
+func (i *UserInteractor) Delete(id uint32) {
+	i.Logger.Log("Interactor: User Delete")
+	// ユーザの取得
+	user, err := i.UserRepositoryPort.FindByID(id)
+	if err != nil {
+		i.Logger.Log("error")
+		return
+	}
+	// ユーザの削除
+	if err = i.UserRepositoryPort.Delete(user); err != nil {
+		return
+	}
+
+	i.UserOutputPort.RenderSuccess()
 }

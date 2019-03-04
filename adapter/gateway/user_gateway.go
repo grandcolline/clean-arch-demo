@@ -33,6 +33,21 @@ func (g *UserGateway) Store(u entity.User) (id uint32, err error) {
 	return uint32(user.ID), nil
 }
 
+// Delete ユーザの削除をする
+func (g *UserGateway) Delete(u entity.User) (err error) {
+	user := &model.User{
+		Model: gorm.Model{ID: uint(u.ID)},
+		Name:  u.Name,
+		Email: u.Email,
+	}
+
+	if err = g.Conn.Delete(user).Error; err != nil {
+		return
+	}
+
+	return
+}
+
 // FindByName 名前でユーザを検索する
 func (g *UserGateway) FindByName(name string) (d []entity.User, err error) {
 	users := []model.User{}

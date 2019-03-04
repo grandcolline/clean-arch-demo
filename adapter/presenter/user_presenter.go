@@ -55,3 +55,10 @@ func (p *UserPresenter) RenderUserList(us *[]entity.User) error {
 	p.writer.Write(res)
 	return nil
 }
+
+// RenderSuccess successって返す。
+func (p *UserPresenter) RenderSuccess() error {
+	// p.writer.Header().Set("Content-Type", "application/json")
+	p.writer.Write([]byte("success"))
+	return nil
+}

@@ -82,3 +82,17 @@ func (c *UserController) Add(w http.ResponseWriter, r *http.Request) {
 	// usecaseの実行
 	inputPort.Add(e)
 }
+
+// Delete ユーザを削除する
+func (c *UserController) Delete(w http.ResponseWriter, r *http.Request) {
+	// inputPortの組み立て
+	outputPort := c.OutputFactory(w)
+	inputPort := c.InputFactory(outputPort)
+
+	// IDの取得
+	userID := chi.URLParam(r, "userID")
+	id, _ := strconv.ParseUint(userID, 10, 32)
+
+	// usecaseの実行
+	inputPort.Delete(uint32(id))
+}
