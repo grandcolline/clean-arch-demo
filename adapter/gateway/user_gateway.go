@@ -42,7 +42,7 @@ func (g *UserGateway) Update(u entity.User) (err error) {
 		Email: u.Email,
 	}
 
-	if err = g.Conn.Omit("created_at", "deleted_at").Save(user).Error; err != nil {
+	if err = g.Conn.Omit("created_at").Save(user).Error; err != nil {
 		return
 	}
 
