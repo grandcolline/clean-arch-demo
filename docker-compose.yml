@@ -11,8 +11,6 @@ services:
       # --- exclude volums ---
       - /go/src/github.com/grandcolline/clean-arch-demo/.docker/
       - /go/src/github.com/grandcolline/clean-arch-demo/.git/
-    environment:
-      APP_DATABASE_HOST: mysql
     ports:
       - 8080:8080
     depends_on:

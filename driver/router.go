@@ -6,14 +6,21 @@ import (
 	"github.com/go-chi/chi"
 	"github.com/grandcolline/clean-arch-demo/adapter/controller"
 	"github.com/grandcolline/clean-arch-demo/adapter/gateway"
+	"github.com/grandcolline/clean-arch-demo/driver/config"
 	"github.com/grandcolline/clean-arch-demo/driver/mysql"
 )
 
+// conf アプリケーション設定
+var conf config.AppConf
+
 // Serve サーバのルーティング設定
 func Serve() {
+	// 設定の読み込み
+	conf.Init()
+
 	r := chi.NewRouter()
 	r.Mount("/users", userRouter())
-	http.ListenAndServe(":8080", r)
+	http.ListenAndServe(":"+conf.Port, r)
 }
 
 // userRouter ユーザ用のサブルーター
