@@ -28,7 +28,7 @@ func Connect() (db *gorm.DB) {
 		conf.Password,
 		conf.Host,
 		conf.Port,
-		conf.DBName,
+		conf.Database,
 	)
 	if db, err = gorm.Open("mysql", url); err != nil {
 		panic(err)

@@ -8,6 +8,7 @@ import (
 	"github.com/grandcolline/clean-arch-demo/adapter/gateway"
 	"github.com/grandcolline/clean-arch-demo/driver/config"
 	"github.com/grandcolline/clean-arch-demo/driver/mysql"
+	"github.com/grandcolline/clean-arch-demo/usecase"
 )
 
 // conf アプリケーション設定
@@ -26,8 +27,11 @@ func Serve() {
 // userRouter ユーザ用のサブルーター
 func userRouter() http.Handler {
 	// ユーザゲートウェイの作成
-	conn := mysql.Connect()
-	userGateway := gateway.NewUserGateway(conn)
+	var userGateway usecase.UserRepositoryPort
+	if conf.Gateway == "mysql" {
+		conn := mysql.Connect()
+		userGateway = gateway.NewUserGateway(conn)
+	}
 
 	// ユーザコントローラの作成
 	logger := &Logger{}

@@ -11,6 +11,15 @@ services:
       # --- exclude volums ---
       - /go/src/github.com/grandcolline/clean-arch-demo/.docker/
       - /go/src/github.com/grandcolline/clean-arch-demo/.git/
+    environment:
+      # --- 全体設定 ---
+      APP_GATEWAY: "mysql"
+      # --- MySQLの設定 ---
+      MYSQL_HOST: "mysql"
+      MYSQL_USER: "root"
+      MYSQL_PASSWORD: ""
+      MYSQL_DATABASE: "app"
+      MYSQL_CREATETABLE: "true"
     ports:
       - 8080:8080
     depends_on:
@@ -20,10 +29,9 @@ services:
   mysql:
     image: mysql:5.7
     environment:
-      MYSQL_DATABASE: app
+      MYSQL_DATABASE: "app"
       MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
     volumes:
       - ./.docker/mysql/data:/var/lib/mysql:cached
-      #- ./.docker/mysql/initdb.d:/docker-entrypoint-initdb.d
     ports:
       - 3306:3306

@@ -8,8 +8,8 @@ import (
 
 // AppConf アプリケーション全体の設定
 type AppConf struct {
-	Port    string `default:"8080"`  // サーバ起動時に受け付けるポート
-	Gateway string `default:"mysql"` // Gatewayのモード（mysql/mock）
+	Port    string `default:"8080"` // サーバ起動時に受け付けるポート
+	Gateway string `default:"mock"` // Gatewayのモード（mock/mysql）
 }
 
 // Init アプリケーション全体設定を環境変数から取得します
@@ -23,11 +23,11 @@ func (conf *AppConf) Init() {
 // MysqlConf MySQLの設定
 // これはAppConf.Gatewayがmysqlのときに読み込まれる。
 type MysqlConf struct {
-	Host        string `default:"mysql"` // 接続先ホスト
+	Host        string `required:"true"` // 接続先ホスト
 	Port        string `default:"3306"`  // 接続先ポート
-	User        string `default:"root"`  // ユーザ
-	Password    string `default:""`      // パスワード
-	DBName      string `default:"app"`   // データベース名
+	User        string `required:"true"` // DB接続ユーザ
+	Password    string `required:"true"` // DB接続パスワード
+	Database    string `required:"true"` // データベース名
 	CreateTable bool   `default:"false"` // テーブルがないときにテーブルを作成するか（true/false）
 }
 
