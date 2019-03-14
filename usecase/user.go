@@ -66,7 +66,7 @@ func (i *UserInteractor) Add(u entity.User) {
 /*
 Change はユーザ情報の変更をします。
 
-変更可能な値は名前とメールアドレスのみです。
+変更可能な値はユーザ名とメールアドレスのみです。
 */
 func (i *UserInteractor) Change(u entity.User) {
 	i.Logger.Log("Interactor: User Change")
@@ -142,7 +142,7 @@ func (i *UserInteractor) FindByID(id uint32) {
 	i.UserOutputPort.RenderUser(&user)
 }
 
-// FindByName 名前でユーザを検索する
+// FindByName ユーザ名でユーザを検索する
 func (i *UserInteractor) FindByName(name string) {
 	i.Logger.Log("Interactor: User FindByName")
 	users, err := i.UserRepositoryPort.FindByName(name)

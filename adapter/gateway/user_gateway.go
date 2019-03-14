@@ -67,7 +67,7 @@ func (g *UserGateway) Delete(u entity.User) error {
 }
 
 /*
-FindByName は「名前」でユーザを検索します。
+FindByName はユーザ名でユーザを検索します。
 
 1件もヒットしなかった場合は、エラーでなく空のエンティティを返します。
 */

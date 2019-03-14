@@ -41,7 +41,7 @@ func (u *User) Validate() (ok bool, m []string) {
 	ok = true
 	// Nameのバリデーションチェック
 	if len(u.Name) > 20 {
-		m = append(m, "名前は20文字以内にしてください。")
+		m = append(m, "ユーザ名は20文字以内にしてください。")
 		ok = false
 	}
 	// Emailのバリデーションチェック
@@ -56,7 +56,7 @@ func (u *User) Validate() (ok bool, m []string) {
 func (u *User) Require() (ok bool, m []string) {
 	ok = true
 	if u.Name == "" {
-		m = append(m, "名前は必須項目です。")
+		m = append(m, "ユーザ名は必須項目です。")
 		ok = false
 	}
 	if u.Email == "" {

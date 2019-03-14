@@ -66,7 +66,7 @@ Example Responce:
 		"result": 422
 		"status": "validation error"
 		"errors": [
-			{ "message": "名前は必須項目です。" },
+			{ "message": "ユーザ名は必須項目です。" },
 			{ "message": "メールアドレスは必須項目です。" }
 		]
 	}
