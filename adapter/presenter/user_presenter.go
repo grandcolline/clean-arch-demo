@@ -8,12 +8,12 @@ import (
 	"github.com/grandcolline/clean-arch-demo/usecase"
 )
 
-// UserPresenter ユーザプレゼンタ
+// UserPresenter ユーザプレゼンター
 type UserPresenter struct {
 	writer http.ResponseWriter
 }
 
-// NewUserPresenter ユーザプレゼンタの作成
+// NewUserPresenter ユーザプレゼンターの作成
 func NewUserPresenter(w http.ResponseWriter) usecase.UserOutputPort {
 	return &UserPresenter{
 		writer: w,
@@ -27,7 +27,16 @@ type User struct {
 	Email string `json:"email"`
 }
 
-// RenderUser ユーザをjsonでかえす
+/*
+RenderUser はユーザをjsonでかえします。
+
+Example Responce:
+	{
+		"id": 1,
+		"name": "John Lennon",
+		"email": "john@example.com"
+	}
+*/
 func (p *UserPresenter) RenderUser(u *entity.User) error {
 	user := User{u.ID, u.Name, u.Email}
 	res, err := json.Marshal(user)
@@ -40,7 +49,23 @@ func (p *UserPresenter) RenderUser(u *entity.User) error {
 	return nil
 }
 
-// RenderUserList ユーザのリストをjsonでかえす
+/*
+RenderUserList はユーザのリストをjsonでかえします。
+
+Example Responce:
+	[
+		{
+			"id": 1,
+			"name": "John Lennon",
+			"email": "john@example.com"
+		},
+		{
+			"id": 2,
+			"name": "Paul Mccartney",
+			"email": "paul@example.com"
+		}
+	]
+*/
 func (p *UserPresenter) RenderUserList(us *[]entity.User) error {
 	var users []User
 	for _, u := range *us {
@@ -53,12 +78,5 @@ func (p *UserPresenter) RenderUserList(us *[]entity.User) error {
 	}
 	p.writer.Header().Set("Content-Type", "application/json")
 	p.writer.Write(res)
-	return nil
-}
-
-// RenderSuccess successって返す。
-func (p *UserPresenter) RenderSuccess() error {
-	// p.writer.Header().Set("Content-Type", "application/json")
-	p.writer.Write([]byte("success"))
 	return nil
 }

@@ -12,7 +12,7 @@ type User struct {
 	Email string `gorm:"size:100;not null"`
 }
 
-// ToEntity ユーザモデルをユーザエンティティに詰め直す
+// ToEntity ユーザモデルをユーザエンティティに詰め直します。
 func (m *User) ToEntity() (e entity.User) {
 	e.ID = uint32(m.ID)
 	e.Name = m.Name

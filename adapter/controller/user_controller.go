@@ -13,15 +13,19 @@ import (
 
 // UserController ユーザコントローラ
 type UserController struct {
-	InputFactory  func(o usecase.UserOutputPort) usecase.UserInputPort
-	OutputFactory func(w http.ResponseWriter) usecase.UserOutputPort
+	InputFactory    func(out usecase.UserOutputPort, cout usecase.CmnOutputPort) usecase.UserInputPort
+	CmnInputFactory func(w http.ResponseWriter) usecase.CmnOutputPort
+	OutputFactory   func(w http.ResponseWriter) usecase.UserOutputPort
 }
 
 // NewUserController ユーザコントローラの作成
 func NewUserController(repo usecase.UserRepositoryPort, logger logger.Logger) *UserController {
 	return &UserController{
-		InputFactory: func(o usecase.UserOutputPort) usecase.UserInputPort {
-			return usecase.NewUserInteractor(o, repo, logger)
+		InputFactory: func(out usecase.UserOutputPort, cout usecase.CmnOutputPort) usecase.UserInputPort {
+			return usecase.NewUserInteractor(out, cout, repo, logger)
+		},
+		CmnInputFactory: func(w http.ResponseWriter) usecase.CmnOutputPort {
+			return presenter.NewCmnPresenter(w)
 		},
 		OutputFactory: func(w http.ResponseWriter) usecase.UserOutputPort {
 			return presenter.NewUserPresenter(w)
@@ -33,7 +37,8 @@ func NewUserController(repo usecase.UserRepositoryPort, logger logger.Logger) *U
 func (c *UserController) FindByID(w http.ResponseWriter, r *http.Request) {
 	// inputPortの組み立て
 	outputPort := c.OutputFactory(w)
-	inputPort := c.InputFactory(outputPort)
+	cmnOutputPort := c.CmnInputFactory(w)
+	inputPort := c.InputFactory(outputPort, cmnOutputPort)
 
 	// IDの取得
 	userID := chi.URLParam(r, "userID")
@@ -47,7 +52,8 @@ func (c *UserController) FindByID(w http.ResponseWriter, r *http.Request) {
 func (c *UserController) FindAll(w http.ResponseWriter, r *http.Request) {
 	// inputPortの組み立て
 	outputPort := c.OutputFactory(w)
-	inputPort := c.InputFactory(outputPort)
+	cmnOutputPort := c.CmnInputFactory(w)
+	inputPort := c.InputFactory(outputPort, cmnOutputPort)
 
 	// usecaseの実行
 	inputPort.FindAll()
@@ -57,7 +63,8 @@ func (c *UserController) FindAll(w http.ResponseWriter, r *http.Request) {
 func (c *UserController) Add(w http.ResponseWriter, r *http.Request) {
 	// inputPortの組み立て
 	outputPort := c.OutputFactory(w)
-	inputPort := c.InputFactory(outputPort)
+	cmnOutputPort := c.CmnInputFactory(w)
+	inputPort := c.InputFactory(outputPort, cmnOutputPort)
 
 	// POSTのデータを読み取る
 	var f form.User
@@ -66,13 +73,13 @@ func (c *UserController) Add(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// 必須・バリデーションチェック
-	if ok, _ := f.Require(); !ok {
-		// TODO: 後でエラーハンドリングする
+	// 必須チェック・バリデーションチェック
+	if ok, messages := f.Require(); !ok {
+		cmnOutputPort.ValidationErrRender(messages)
 		return
 	}
-	if ok, _ := f.Validate(); !ok {
-		// TODO: 後でエラーハンドリングする
+	if ok, messages := f.Validate(); !ok {
+		cmnOutputPort.ValidationErrRender(messages)
 		return
 	}
 
@@ -87,7 +94,8 @@ func (c *UserController) Add(w http.ResponseWriter, r *http.Request) {
 func (c *UserController) Change(w http.ResponseWriter, r *http.Request) {
 	// inputPortの組み立て
 	outputPort := c.OutputFactory(w)
-	inputPort := c.InputFactory(outputPort)
+	cmnOutputPort := c.CmnInputFactory(w)
+	inputPort := c.InputFactory(outputPort, cmnOutputPort)
 
 	// IDの取得
 	userID := chi.URLParam(r, "userID")
@@ -101,8 +109,8 @@ func (c *UserController) Change(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// バリデーションチェック
-	if ok, _ := f.Validate(); !ok {
-		// TODO: 後でエラーハンドリングする
+	if ok, messages := f.Validate(); !ok {
+		cmnOutputPort.ValidationErrRender(messages)
 		return
 	}
 
@@ -118,11 +126,15 @@ func (c *UserController) Change(w http.ResponseWriter, r *http.Request) {
 func (c *UserController) Delete(w http.ResponseWriter, r *http.Request) {
 	// inputPortの組み立て
 	outputPort := c.OutputFactory(w)
-	inputPort := c.InputFactory(outputPort)
+	cmnOutputPort := c.CmnInputFactory(w)
+	inputPort := c.InputFactory(outputPort, cmnOutputPort)
 
 	// IDの取得
 	userID := chi.URLParam(r, "userID")
-	id, _ := strconv.ParseUint(userID, 10, 32)
+	id, err := strconv.ParseUint(userID, 10, 32)
+	if err != nil {
+		cmnOutputPort.SuccessRender()
+	}
 
 	// usecaseの実行
 	inputPort.Delete(uint32(id))
