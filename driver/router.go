@@ -14,7 +14,7 @@ import (
 // conf アプリケーション設定
 var conf config.AppConf
 
-// Serve サーバのルーティング設定
+// Serve はサーバのルーティング設定を行います
 func Serve() {
 	// 設定の読み込み
 	conf.Init()
@@ -24,7 +24,10 @@ func Serve() {
 	http.ListenAndServe(":"+conf.Port, r)
 }
 
-// userRouter ユーザ用のサブルーター
+/*
+userRouter はユーザ用のサブルーターとして、
+`/users/*`のルーティングを行います。
+*/
 func userRouter() http.Handler {
 	// ユーザゲートウェイの作成
 	var userGateway usecase.UserRepositoryPort
