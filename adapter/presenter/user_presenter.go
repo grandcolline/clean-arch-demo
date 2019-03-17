@@ -30,7 +30,7 @@ type User struct {
 /*
 RenderUser はユーザをjsonでかえします。
 
-Example Responce:
+Example Response:
 	{
 		"id": 1,
 		"name": "John Lennon",
@@ -52,7 +52,7 @@ func (p *UserPresenter) RenderUser(u *entity.User) error {
 /*
 RenderUserList はユーザのリストをjsonでかえします。
 
-Example Responce:
+Example Response:
 	[
 		{
 			"id": 1,

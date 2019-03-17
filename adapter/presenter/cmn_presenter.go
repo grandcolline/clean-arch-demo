@@ -35,7 +35,7 @@ type Error struct {
 /*
 SuccessRender は処理の成功時のレスポンスを返します。
 
-Example Responce:
+Example Response:
 	{
 		"result": 200
 		"status": "success"
@@ -61,7 +61,7 @@ func (p *CmnPresenter) SuccessRender() {
 /*
 ValidationErrRender はバリデーションエラーを返します。
 
-Example Responce:
+Example Response:
 	{
 		"result": 422
 		"status": "validation error"
@@ -100,7 +100,7 @@ func (p *CmnPresenter) ValidationErrRender(ss []string) {
 /*
 ServerErrRender はサーバエラーを返します。
 
-Example Responce:
+Example Response:
 	{
 		"result": 503
 		"status": "internal server error"
@@ -125,7 +125,7 @@ func (p *CmnPresenter) ServerErrRender() {
 /*
 NoRecordErrRender はレコードがない場合に返します。
 
-Example Responce:
+Example Response:
 	{
 		"result": 404
 		"status": "no record error"

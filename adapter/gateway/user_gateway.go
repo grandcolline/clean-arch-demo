@@ -43,11 +43,7 @@ func (g *UserGateway) Update(u entity.User) error {
 	}
 
 	// データをアップデートする
-	if err := g.Conn.Omit("created_at").Save(user).Error; err != nil {
-		return err
-	}
-
-	return nil
+	return g.Conn.Omit("created_at").Save(user).Error
 }
 
 // Delete ユーザの削除をする
@@ -59,11 +55,7 @@ func (g *UserGateway) Delete(u entity.User) error {
 	}
 
 	// データを削除する
-	if err := g.Conn.Delete(user).Error; err != nil {
-		return err
-	}
-
-	return nil
+	return g.Conn.Delete(user).Error
 }
 
 /*
