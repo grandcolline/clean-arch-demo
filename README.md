@@ -26,11 +26,11 @@ $ docker run grandcolline/clean-arch-demo
 
 ### Entities
 
-ビジネスルールの為のデータ構造、もしくはメソッドを持ったオブジェクト
+ビジネスルールの為のデータ構造、もしくはメソッドを持ったオブジェクト。
 
 ```java
 entity
- └── user.go
+ └── user.go  // ユーザエンティティ
 ```
 
 ### Use cases
@@ -39,8 +39,8 @@ entity
 
 ```java
 usecase
- ├── logger.go
- └── user.go
+ ├── user.go  // ユーザエンティティに対するインストラクタの実装
+ └── util.go  // 複数のインストラクタで共通のポートの定義
 ```
 
 ### Interface Adapters
@@ -52,14 +52,18 @@ usecase
 
 ```java
 adapter
- ├── controller
- │   ├── error.go
+ ├── controller  // InputPortの実行
+ │   ├── form
+ │   │   └── user_form.go
  │   └── user_controller.go
- ├── gateway
- │   └── user_repository.go
- ├── logger
- │   └── logger.go
- └── presenter
+ ├── gateway  // RegistoryPortの実装
+ │   ├── model
+ │   │   └── user_model.go
+ │   └── user_gateway.go
+ ├── logger  // LoggerPortの実装
+ │   └── logger.go
+ └── presenter  // OutputPortの実装
+     ├── cmn_presenter.go
      └── user_presenter.go
 ```
 
@@ -70,7 +74,8 @@ adapter
 
 ```java
 driver
- ├── logger.go
+ ├── config
+ │   └── config.go
  ├── mysql
  │   └── connection.go
  └── router.go
