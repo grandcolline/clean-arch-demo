@@ -13,12 +13,13 @@ services:
       - /go/src/github.com/grandcolline/clean-arch-demo/.git/
     environment:
       # --- 全体設定 ---
-      APP_GATEWAY: "mysql"
+      APP_DEBUG: "true"
       # --- MySQLの設定 ---
       MYSQL_HOST: "mysql"
       MYSQL_USER: "root"
       MYSQL_PASSWORD: ""
       MYSQL_DATABASE: "app"
+      MYSQL_LOGMODE: "true"
       MYSQL_CREATETABLE: "true"
     ports:
       - 8080:8080

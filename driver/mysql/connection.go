@@ -38,6 +38,9 @@ func Connect() (db *gorm.DB) {
 	// TODO: db.AutoMigrateの方が良さそう...
 	checkTable(db, "users", &model.User{})
 
+	// LOG MODE
+	db.LogMode(conf.LogMode)
+
 	return
 }
 
