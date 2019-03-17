@@ -52,17 +52,17 @@ usecase
 
 ```java
 adapter
- ├── controller  // InputPortの実行
+ ├── controller              // Controller: InputPortの実行。
  │   ├── form
  │   │   └── user_form.go
  │   └── user_controller.go
- ├── gateway  // RegistoryPortの実装
+ ├── gateway                 // Gateway: RegistoryPortの実装。DBとの接続。
  │   ├── model
  │   │   └── user_model.go
  │   └── user_gateway.go
- ├── logger  // LoggerPortの実装
+ ├── logger                  // Logger: LoggerPortの実装。ログの出力。
  │   └── logger.go
- └── presenter  // OutputPortの実装
+ └── presenter               // Presenter: OutputPortの実装。ユーザレスポンス。
      ├── cmn_presenter.go
      └── user_presenter.go
 ```
