@@ -7,7 +7,7 @@ type UserInteractor struct {
 	UserOutputPort     UserOutputPort
 	CmnOutputPort      CmnOutputPort
 	UserRepositoryPort UserRepositoryPort
-	Logger             Logger
+	Logger             LoggerPort
 }
 
 // UserInputPort ユーザインプットポート
@@ -38,7 +38,7 @@ type UserRepositoryPort interface {
 }
 
 // NewUserInteractor はユーザインタラクタの作成を行います。
-func NewUserInteractor(out UserOutputPort, cout CmnOutputPort, repo UserRepositoryPort, logger Logger) UserInputPort {
+func NewUserInteractor(out UserOutputPort, cout CmnOutputPort, repo UserRepositoryPort, logger LoggerPort) UserInputPort {
 	return &UserInteractor{
 		UserOutputPort:     out,
 		CmnOutputPort:      cout,
@@ -49,12 +49,12 @@ func NewUserInteractor(out UserOutputPort, cout CmnOutputPort, repo UserReposito
 
 // Add は新規ユーザを追加するメソッドです。
 func (i *UserInteractor) Add(u entity.User) {
-	i.Logger.Log("Interactor: User Add")
+	i.Logger.Debug("Interactor: User Add")
 
 	// ユーザの登録
 	user, err := i.UserRepositoryPort.Store(u)
 	if err != nil {
-		i.Logger.Log("error")
+		i.Logger.Error("error")
 		i.CmnOutputPort.ServerErrRender()
 		return
 	}
@@ -69,17 +69,17 @@ Change はユーザ情報の変更をします。
 変更可能な値はユーザ名とメールアドレスのみです。
 */
 func (i *UserInteractor) Change(u entity.User) {
-	i.Logger.Log("Interactor: User Change")
+	i.Logger.Debug("Interactor: User Change")
 
 	// ユーザ情報の取得
 	user, err := i.UserRepositoryPort.FindByID(u.ID)
 	if i.UserRepositoryPort.IsNotFound(err) {
-		i.Logger.Log("entity not found")
+		i.Logger.Error("entity not found")
 		i.CmnOutputPort.NoRecordErrRender("ユーザが存在しません。")
 		return
 	}
 	if err != nil {
-		i.Logger.Log("error")
+		i.Logger.Error("error")
 		i.CmnOutputPort.ServerErrRender()
 		return
 	}
@@ -95,7 +95,7 @@ func (i *UserInteractor) Change(u entity.User) {
 
 	// ユーザ情報の変更
 	if err := i.UserRepositoryPort.Update(user); err != nil {
-		i.Logger.Log("error")
+		i.Logger.Error("error")
 		return
 	}
 
@@ -105,16 +105,16 @@ func (i *UserInteractor) Change(u entity.User) {
 
 // FindAll はすべてのユーザを検索します。
 func (i *UserInteractor) FindAll() {
-	i.Logger.Log("Interactor: User FindAll")
+	i.Logger.Debug("Interactor: User FindAll")
 
 	users, err := i.UserRepositoryPort.FindAll()
 	if i.UserRepositoryPort.IsNotFound(err) {
-		i.Logger.Log("entity not found")
+		i.Logger.Error("entity not found")
 		i.CmnOutputPort.NoRecordErrRender("ユーザが存在しません。")
 		return
 	}
 	if err != nil {
-		i.Logger.Log("error")
+		i.Logger.Error("error")
 		i.CmnOutputPort.ServerErrRender()
 		return
 	}
@@ -125,15 +125,15 @@ func (i *UserInteractor) FindAll() {
 
 // FindByID はIDでユーザを検索します。
 func (i *UserInteractor) FindByID(id uint32) {
-	i.Logger.Log("Interactor: User FindByID")
+	i.Logger.Debug("Interactor: User FindByID")
 	user, err := i.UserRepositoryPort.FindByID(id)
 	if i.UserRepositoryPort.IsNotFound(err) {
-		i.Logger.Log("entity not found")
+		i.Logger.Error("entity not found")
 		i.CmnOutputPort.NoRecordErrRender("ユーザが存在しません。")
 		return
 	}
 	if err != nil {
-		i.Logger.Log("error")
+		i.Logger.Error("error")
 		i.CmnOutputPort.ServerErrRender()
 		return
 	}
@@ -144,10 +144,10 @@ func (i *UserInteractor) FindByID(id uint32) {
 
 // FindByName ユーザ名でユーザを検索する
 func (i *UserInteractor) FindByName(name string) {
-	i.Logger.Log("Interactor: User FindByName")
+	i.Logger.Debug("Interactor: User FindByName")
 	users, err := i.UserRepositoryPort.FindByName(name)
 	if err != nil {
-		i.Logger.Log("error")
+		i.Logger.Error("error")
 		return
 	}
 
@@ -157,23 +157,23 @@ func (i *UserInteractor) FindByName(name string) {
 
 // Delete はユーザを削除します。
 func (i *UserInteractor) Delete(id uint32) {
-	i.Logger.Log("Interactor: User Delete")
+	i.Logger.Debug("Interactor: User Delete")
 	// ユーザの取得
 	user, err := i.UserRepositoryPort.FindByID(id)
 	if i.UserRepositoryPort.IsNotFound(err) {
-		i.Logger.Log("entity not found")
+		i.Logger.Error("entity not found")
 		i.CmnOutputPort.NoRecordErrRender("ユーザが存在しません。")
 		return
 	}
 	if err != nil {
-		i.Logger.Log("error")
+		i.Logger.Error("error")
 		i.CmnOutputPort.ServerErrRender()
 		return
 	}
 
 	// ユーザの削除
 	if err = i.UserRepositoryPort.Delete(user); err != nil {
-		i.Logger.Log("error")
+		i.Logger.Error("error")
 		i.CmnOutputPort.ServerErrRender()
 		return
 	}

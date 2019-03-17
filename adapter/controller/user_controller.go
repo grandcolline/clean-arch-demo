@@ -6,7 +6,6 @@ import (
 
 	"github.com/go-chi/chi"
 	"github.com/grandcolline/clean-arch-demo/adapter/controller/form"
-	"github.com/grandcolline/clean-arch-demo/adapter/logger"
 	"github.com/grandcolline/clean-arch-demo/adapter/presenter"
 	"github.com/grandcolline/clean-arch-demo/usecase"
 )
@@ -19,7 +18,7 @@ type UserController struct {
 }
 
 // NewUserController ユーザコントローラの作成
-func NewUserController(repo usecase.UserRepositoryPort, logger logger.Logger) *UserController {
+func NewUserController(repo usecase.UserRepositoryPort, logger usecase.LoggerPort) *UserController {
 	return &UserController{
 		InputFactory: func(out usecase.UserOutputPort, cout usecase.CmnOutputPort) usecase.UserInputPort {
 			return usecase.NewUserInteractor(out, cout, repo, logger)

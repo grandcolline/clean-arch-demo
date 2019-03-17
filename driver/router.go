@@ -6,6 +6,7 @@ import (
 	"github.com/go-chi/chi"
 	"github.com/grandcolline/clean-arch-demo/adapter/controller"
 	"github.com/grandcolline/clean-arch-demo/adapter/gateway"
+	"github.com/grandcolline/clean-arch-demo/adapter/logger"
 	"github.com/grandcolline/clean-arch-demo/driver/config"
 	"github.com/grandcolline/clean-arch-demo/driver/mysql"
 )
@@ -33,7 +34,7 @@ func userRouter() http.Handler {
 	userGateway := gateway.NewUserGateway(conn)
 
 	// ユーザコントローラの作成
-	logger := &Logger{}
+	logger := logger.NewLogger(conf.LogLevel)
 	userController := controller.NewUserController(userGateway, logger)
 
 	// ルーティング

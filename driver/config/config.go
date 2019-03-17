@@ -8,8 +8,8 @@ import (
 
 // AppConf アプリケーション全体の設定
 type AppConf struct {
-	Port  string `default:"8080"`  // サーバ起動時に受け付けるポート
-	Debug bool   `default:"false"` // デバッグモードで起動するか
+	Port     string `default:"8080"` // サーバ起動時に受け付けるポート
+	LogLevel string `default:"INFO"` // ログレベル（DEBUG/INFO/ERROR）
 }
 
 // Init アプリケーション全体設定を環境変数から取得します

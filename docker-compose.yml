@@ -13,7 +13,7 @@ services:
       - /go/src/github.com/grandcolline/clean-arch-demo/.git/
     environment:
       # --- 全体設定 ---
-      APP_DEBUG: "true"
+      APP_LOGLEVEL: "DEBUG"
       # --- MySQLの設定 ---
       MYSQL_HOST: "mysql"
       MYSQL_USER: "root"
