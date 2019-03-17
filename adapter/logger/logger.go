@@ -37,7 +37,7 @@ func NewLogger(s string) usecase.LoggerPort {
 
 // Debug はデバッグレベルのログを出力します。
 func (l *Logger) Debug(args ...interface{}) {
-	if l.outputChack(debugLevel) {
+	if l.outputCheck(debugLevel) {
 		log.SetPrefix("[DEBUG] ")
 		log.Println(args...)
 	}
@@ -45,7 +45,7 @@ func (l *Logger) Debug(args ...interface{}) {
 
 // Info はインフォレベルのログを出力します。
 func (l *Logger) Info(args ...interface{}) {
-	if l.outputChack(infoLevel) {
+	if l.outputCheck(infoLevel) {
 		log.SetPrefix("[INFO] ")
 		log.Println(args...)
 	}
@@ -53,7 +53,7 @@ func (l *Logger) Info(args ...interface{}) {
 
 // Error はエラーレベルのログを出力します。
 func (l *Logger) Error(args ...interface{}) {
-	if l.outputChack(errorLevel) {
+	if l.outputCheck(errorLevel) {
 		log.SetPrefix("[ERROR] ")
 		log.SetFlags(log.LstdFlags | log.Lshortfile)
 		log.Println(args...)
@@ -61,8 +61,8 @@ func (l *Logger) Error(args ...interface{}) {
 
 }
 
-// outputChack は設定されているログレベルと比較して、出力するかどうかを判定します。
-func (l *Logger) outputChack(level logLevel) bool {
+// outputCheck は設定されているログレベルと比較して、出力するかどうかを判定します。
+func (l *Logger) outputCheck(level logLevel) bool {
 	switch l.level {
 	// エラーレベルが設定されているとき
 	case errorLevel:
