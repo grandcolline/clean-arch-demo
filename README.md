@@ -22,18 +22,18 @@ $ docker run grandcolline/clean-arch-demo
 
 ## API TEST
 
-```
-# POST
+```bash
+# 登録
 $ curl -X POST "http://localhost:8080/users" -d "{\"name\":\"John\",\"email\":\"John@example.com\"}"
 
-# GET
+# 確認
 $ curl -X GET "http://localhost:8080/users"
 $ curl -X GET "http://localhost:8080/users/1"
 
-# PUT
+# 変更
 $ curl -X PUT "http://localhost:8080/users/1" -d "{\"name\":\"Johhhn\",\"email\":\"John@example.com\"}"
 
-# DELETE
+# 削除
 $ curl -X DELETE "http://localhost:8080/users/1"
 ```
 
