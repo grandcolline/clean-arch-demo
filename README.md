@@ -15,9 +15,6 @@ $ docker-compose up -d
 
 # Build
 $ docker build -t grandcolline/clean-arch-demo .
-
-# Run
-$ docker run grandcolline/clean-arch-demo
 ```
 
 ## API TEST
