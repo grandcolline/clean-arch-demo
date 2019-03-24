@@ -20,6 +20,23 @@ $ docker build -t grandcolline/clean-arch-demo .
 $ docker run grandcolline/clean-arch-demo
 ```
 
+## API TEST
+
+```
+# POST
+$ curl -X POST "http://localhost:8080/users" -d "{\"name\":\"John\",\"email\":\"John@example.com\"}"
+
+# GET
+$ curl -X GET "http://localhost:8080/users"
+$ curl -X GET "http://localhost:8080/users/1"
+
+# PUT
+$ curl -X PUT "http://localhost:8080/users/1" -d "{\"name\":\"Johhhn\",\"email\":\"John@example.com\"}"
+
+# DELETE
+$ curl -X DELETE "http://localhost:8080/users/1"
+```
+
 ## Note
 
 ![uncle-bob's CleanArchitecture image](https://blog.cleancoder.com/uncle-bob/images/2012-08-13-the-clean-architecture/CleanArchitecture.jpg)
