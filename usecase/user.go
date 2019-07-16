@@ -13,11 +13,11 @@ type UserInteractor struct {
 // UserInputPort ユーザインプットポート
 type UserInputPort interface {
 	FindAll()
-	FindByID(uint32)
+	FindByID(string)
 	FindByName(string)
-	Add(entity.User)
-	Change(entity.User)
-	Delete(uint32)
+	Add(*entity.User)
+	Change(*entity.User)
+	Delete(string)
 }
 
 // UserOutputPort ユーザアウトプットポート
@@ -28,12 +28,12 @@ type UserOutputPort interface {
 
 // UserRepositoryPort ユーザレポジトリポート
 type UserRepositoryPort interface {
-	Store(entity.User) (entity.User, error)
-	Update(entity.User) error
-	FindAll() ([]entity.User, error)
-	FindByName(string) ([]entity.User, error)
-	FindByID(uint32) (entity.User, error)
-	Delete(entity.User) error
+	Store(*entity.User) (*entity.User, error)
+	Update(*entity.User) error
+	FindAll() (*[]entity.User, error)
+	FindByName(string) (*[]entity.User, error)
+	FindByID(string) (*entity.User, error)
+	Delete(string) error
 	IsNotFound(error) bool
 }
 
@@ -48,7 +48,7 @@ func NewUserInteractor(out UserOutputPort, cout CmnOutputPort, repo UserReposito
 }
 
 // Add は新規ユーザを追加するメソッドです。
-func (i *UserInteractor) Add(u entity.User) {
+func (i *UserInteractor) Add(u *entity.User) {
 	i.Logger.Debug("Interactor: User Add")
 
 	// ユーザの登録
@@ -60,7 +60,7 @@ func (i *UserInteractor) Add(u entity.User) {
 	}
 
 	// Output
-	i.UserOutputPort.RenderUser(&user)
+	i.UserOutputPort.RenderUser(user)
 }
 
 /*
@@ -68,11 +68,11 @@ Change はユーザ情報の変更をします。
 
 変更可能な値はユーザ名とメールアドレスのみです。
 */
-func (i *UserInteractor) Change(u entity.User) {
+func (i *UserInteractor) Change(u *entity.User) {
 	i.Logger.Debug("Interactor: User Change")
 
 	// ユーザ情報の取得
-	user, err := i.UserRepositoryPort.FindByID(u.ID)
+	user, err := i.UserRepositoryPort.FindByID(u.UUID)
 	if i.UserRepositoryPort.IsNotFound(err) {
 		i.Logger.Error("entity not found")
 		i.CmnOutputPort.NoRecordErrRender("ユーザが存在しません。")
@@ -100,7 +100,7 @@ func (i *UserInteractor) Change(u entity.User) {
 	}
 
 	// Output
-	i.UserOutputPort.RenderUser(&user)
+	i.UserOutputPort.RenderUser(user)
 }
 
 // FindAll はすべてのユーザを検索します。
@@ -120,13 +120,14 @@ func (i *UserInteractor) FindAll() {
 	}
 
 	// Output
-	i.UserOutputPort.RenderUserList(&users)
+	i.UserOutputPort.RenderUserList(users)
 }
 
 // FindByID はIDでユーザを検索します。
-func (i *UserInteractor) FindByID(id uint32) {
+func (i *UserInteractor) FindByID(uuid string) {
 	i.Logger.Debug("Interactor: User FindByID")
-	user, err := i.UserRepositoryPort.FindByID(id)
+
+	user, err := i.UserRepositoryPort.FindByID(uuid)
 	if i.UserRepositoryPort.IsNotFound(err) {
 		i.Logger.Error("entity not found")
 		i.CmnOutputPort.NoRecordErrRender("ユーザが存在しません。")
@@ -139,7 +140,7 @@ func (i *UserInteractor) FindByID(id uint32) {
 	}
 
 	// Output
-	i.UserOutputPort.RenderUser(&user)
+	i.UserOutputPort.RenderUser(user)
 }
 
 // FindByName ユーザ名でユーザを検索する
@@ -152,14 +153,15 @@ func (i *UserInteractor) FindByName(name string) {
 	}
 
 	// Output
-	i.UserOutputPort.RenderUserList(&users)
+	i.UserOutputPort.RenderUserList(users)
 }
 
 // Delete はユーザを削除します。
-func (i *UserInteractor) Delete(id uint32) {
+func (i *UserInteractor) Delete(uuid string) {
 	i.Logger.Debug("Interactor: User Delete")
+
 	// ユーザの取得
-	user, err := i.UserRepositoryPort.FindByID(id)
+	user, err := i.UserRepositoryPort.FindByID(uuid)
 	if i.UserRepositoryPort.IsNotFound(err) {
 		i.Logger.Error("entity not found")
 		i.CmnOutputPort.NoRecordErrRender("ユーザが存在しません。")
@@ -172,7 +174,7 @@ func (i *UserInteractor) Delete(id uint32) {
 	}
 
 	// ユーザの削除
-	if err = i.UserRepositoryPort.Delete(user); err != nil {
+	if err = i.UserRepositoryPort.Delete(user.UUID); err != nil {
 		i.Logger.Error("error")
 		i.CmnOutputPort.ServerErrRender()
 		return

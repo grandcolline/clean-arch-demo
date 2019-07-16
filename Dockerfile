@@ -1,6 +1,8 @@
 ARG GO_VERSION=latest
 
+# ------------------------
 # Develop & Build Stage
+# ------------------------
 FROM golang:${GO_VERSION} as develop
 
 ENV GOOS=linux
@@ -23,7 +25,9 @@ RUN env CGO_ENABLED=0 go install
 # run (for development)
 CMD ["fresh"]
 
+# ------------------------
 # Production Stage
+# ------------------------
 FROM gcr.io/distroless/static as production
 
 COPY --from=develop /go/bin/clean-arch-demo /clean-arch-demo

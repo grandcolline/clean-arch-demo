@@ -22,7 +22,7 @@ func NewUserPresenter(w http.ResponseWriter) usecase.UserOutputPort {
 
 // User ユーザレスポンスの構造体
 type User struct {
-	ID    uint32 `json:"id"`
+	ID    string `json:"id"`
 	Name  string `json:"name"`
 	Email string `json:"email"`
 }
@@ -38,7 +38,7 @@ Example Response:
 	}
 */
 func (p *UserPresenter) RenderUser(u *entity.User) error {
-	user := User{u.ID, u.Name, u.Email}
+	user := User{u.UUID, u.Name, u.Email}
 	res, err := json.Marshal(user)
 	if err != nil {
 		http.Error(p.writer, err.Error(), http.StatusInternalServerError)
@@ -69,7 +69,7 @@ Example Response:
 func (p *UserPresenter) RenderUserList(us *[]entity.User) error {
 	var users []User
 	for _, u := range *us {
-		users = append(users, User{u.ID, u.Name, u.Email})
+		users = append(users, User{u.UUID, u.Name, u.Email})
 	}
 	res, err := json.Marshal(users)
 	if err != nil {

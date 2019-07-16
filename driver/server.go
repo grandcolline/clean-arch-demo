@@ -3,12 +3,13 @@ package driver
 import (
 	"net/http"
 
-	"github.com/go-chi/chi"
 	"github.com/grandcolline/clean-arch-demo/adapter/controller"
 	"github.com/grandcolline/clean-arch-demo/adapter/gateway"
 	"github.com/grandcolline/clean-arch-demo/adapter/logger"
 	"github.com/grandcolline/clean-arch-demo/driver/config"
 	"github.com/grandcolline/clean-arch-demo/driver/mysql"
+
+	"github.com/go-chi/chi"
 )
 
 // conf アプリケーション設定
@@ -41,7 +42,7 @@ func userRouter() http.Handler {
 	r := chi.NewRouter()
 	r.Get("/", userController.FindAll) // GET /users
 	r.Post("/", userController.Add)    // POST /users
-	r.Route("/{userID:[0-9-]+}", func(r chi.Router) {
+	r.Route("/{userID}", func(r chi.Router) {
 		r.Get("/", userController.FindByID)  // GET /users/{userID}
 		r.Put("/", userController.Change)    // PUT /users/{userID}
 		r.Delete("/", userController.Delete) // DELETE /users/{userID}

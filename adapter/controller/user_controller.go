@@ -2,7 +2,6 @@ package controller
 
 import (
 	"net/http"
-	"strconv"
 
 	"github.com/go-chi/chi"
 	"github.com/grandcolline/clean-arch-demo/adapter/controller/form"
@@ -40,11 +39,10 @@ func (c *UserController) FindByID(w http.ResponseWriter, r *http.Request) {
 	inputPort := c.InputFactory(outputPort, cmnOutputPort)
 
 	// IDの取得
-	userID := chi.URLParam(r, "userID")
-	id, _ := strconv.ParseUint(userID, 10, 32)
+	uuid := chi.URLParam(r, "userID")
 
 	// usecaseの実行
-	inputPort.FindByID(uint32(id))
+	inputPort.FindByID(uuid)
 }
 
 // FindAll 全ユーザを検索する
@@ -86,7 +84,7 @@ func (c *UserController) Add(w http.ResponseWriter, r *http.Request) {
 	e := f.ToEntity()
 
 	// usecaseの実行
-	inputPort.Add(e)
+	inputPort.Add(&e)
 }
 
 // Change ユーザ情報の変更
@@ -97,8 +95,7 @@ func (c *UserController) Change(w http.ResponseWriter, r *http.Request) {
 	inputPort := c.InputFactory(outputPort, cmnOutputPort)
 
 	// IDの取得
-	userID := chi.URLParam(r, "userID")
-	id, _ := strconv.ParseUint(userID, 10, 32)
+	uuid := chi.URLParam(r, "userID")
 
 	// POSTのデータを読み取る
 	var f form.User
@@ -115,10 +112,10 @@ func (c *UserController) Change(w http.ResponseWriter, r *http.Request) {
 
 	// エンティティに詰める
 	e := f.ToEntity()
-	e.ID = uint32(id)
+	e.UUID = uuid
 
 	// usecaseの実行
-	inputPort.Change(e)
+	inputPort.Change(&e)
 }
 
 // Delete ユーザを削除する
@@ -129,12 +126,8 @@ func (c *UserController) Delete(w http.ResponseWriter, r *http.Request) {
 	inputPort := c.InputFactory(outputPort, cmnOutputPort)
 
 	// IDの取得
-	userID := chi.URLParam(r, "userID")
-	id, err := strconv.ParseUint(userID, 10, 32)
-	if err != nil {
-		cmnOutputPort.SuccessRender()
-	}
+	uuid := chi.URLParam(r, "userID")
 
 	// usecaseの実行
-	inputPort.Delete(uint32(id))
+	inputPort.Delete(uuid)
 }

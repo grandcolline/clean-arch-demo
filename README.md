@@ -2,7 +2,6 @@
 
 クリーンアーキテクチャもどき。お勉強。
 
-
 ## Develop
 
 ```bash
@@ -21,14 +20,16 @@ $ docker build -t grandcolline/clean-arch-demo .
 
 ```bash
 # 登録
-$ curl -X POST "http://localhost:8080/users" -d "{\"name\":\"John\",\"email\":\"John@example.com\"}"
+$ curl -X POST "http://localhost:8080/users" \
+    -d "{\"name\":\"John\",\"email\":\"John@example.com\"}"
 
 # 確認
 $ curl -X GET "http://localhost:8080/users"
 $ curl -X GET "http://localhost:8080/users/1"
 
 # 変更
-$ curl -X PUT "http://localhost:8080/users/1" -d "{\"name\":\"Johhhn\",\"email\":\"John@example.com\"}"
+$ curl -X PUT "http://localhost:8080/users/1" \
+    -d "{\"name\":\"Johhhn\",\"email\":\"John@example.com\"}"
 
 # 削除
 $ curl -X DELETE "http://localhost:8080/users/1"

@@ -5,6 +5,7 @@ import (
 
 	"github.com/grandcolline/clean-arch-demo/adapter/gateway/model"
 	"github.com/grandcolline/clean-arch-demo/driver/config"
+
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 )

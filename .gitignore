@@ -2,3 +2,4 @@
 !.gitkeep
 .docker/es/data/*
 .docker/mysql/data/*
+tmp/*
